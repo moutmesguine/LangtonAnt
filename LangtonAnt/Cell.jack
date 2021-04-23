@@ -1,0 +1,41 @@
+class Cell{
+	field int xpos, ypos, size;
+	field boolean state;
+	
+	constructor Cell new(int x, int y){
+		let xpos = x;
+		let ypos = y;
+		let size = 16;
+		let state = false;
+		return this;
+	}
+
+	method void dispose(){
+		do Memory.deAlloc(this);
+		return;
+	}
+	
+	method boolean getState(){
+		return state;
+	}
+	
+	method void toggle(){
+		
+		if(state){
+			let state = false;
+			do Screen.setColor(false);
+		}else{
+			let state = true;
+			do Screen.setColor(true);
+		}
+		
+		
+		do draw();		
+		return;
+	}
+	
+	method void draw(){
+		do Screen.drawRectangle(xpos+1, ypos+1, (xpos-1)+size, (ypos-1)+size);
+		return;
+	}
+}

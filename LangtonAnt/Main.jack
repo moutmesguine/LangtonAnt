@@ -1,0 +1,70 @@
+//Langton's Ant Simulator by Michael Outmesguine
+class Main{
+	function void main(){
+		//initialize variables
+		var int x, y, i, apos, antNum;
+		var Array cellArray, antArray;
+		var Cell c;
+		var Ant a;
+		var boolean cstate, exit, valid;
+		var char key;
+		
+		//generate ants from user input
+		do Output.printString("Langton's Ant Simulator");
+		do Output.println();
+		do Output.printString("When simulation is running press any key to exit");
+		do Output.println();
+		let antNum = Keyboard.readInt("How many ants? ");
+		let antArray = Array.new(antNum);
+		let i = 0;
+		while(i<antNum){
+			let x = Keyboard.readInt("starting x position? (between 0 and 31) ");
+			let y = Keyboard.readInt("starting y position? (between 0 and 15) ");
+			let apos = Keyboard.readInt("starting direction? (0=NORTH, 1=EAST, 2=SOUTH, 3=WEST) ");
+			let a = Ant.new(x,y,apos);
+			let antArray[i] = a;
+			let i = i + 1;
+		}
+		do Output.printString("Generating...");
+		
+		//generate cell array that has 512 entries: 16 rows 32 columns
+		let x = 0;
+		let y = 0;
+		let i = 0;
+		let cellArray = Array.new(512);
+		while(y < 256){
+			let x = 0;
+			//create row
+			while(x < 512){
+				let cellArray[i] = Cell.new(x,y);
+				let x = x + 16;
+				let i = i + 1;
+			}
+			let y = y + 16;
+		}
+		
+		//run simulation
+		do Screen.clearScreen();
+		let exit = false;
+		while(~(exit)){
+			let i = 0;
+			while(i < antNum){
+				let a = antArray[i];
+				let apos = a.getPos();
+				let c = cellArray[apos];
+				let cstate = c.getState();
+				do a.turn(cstate);
+				do c.toggle();
+				do a.move();
+				
+				let i = i + 1;
+			}
+			do Sys.wait(200);
+			let key = Keyboard.keyPressed();
+			if(~(key = 0)) {let exit = true;}
+		}
+		do antArray.dispose();
+		do cellArray.dispose();
+		return;
+	}
+}

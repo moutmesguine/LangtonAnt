@@ -1,0 +1,59 @@
+class Ant{
+	field int pos, dir;
+	field boolean valid;
+	
+	constructor Ant new(int xstart, int ystart, int dirstart){
+		let pos = ystart * 32;
+		let pos = pos + xstart;
+		let dir = dirstart;
+		
+		//sets invalid data to 0
+		let valid = checkValid();
+		if(~valid) {let pos = 0;}
+		if((dir<0)|(dir>3)){let dir = 0;}
+		return this;
+	}
+
+	method void dispose(){
+		do Memory.deAlloc(this);
+		return;
+	}
+	
+	method boolean checkValid(){
+		if((pos<0)|(pos>511)){
+			return false;
+		}else{
+			return true;
+		}
+	}
+	
+	method void move(){
+		if(dir = 0) {let pos = pos - 32;}	//move north
+		if(dir = 1) {let pos = pos + 1;}	//move east
+		if(dir = 2) {let pos = pos + 32;}	//move south
+		if(dir = 3) {let pos = pos - 1;}	//move west
+		
+		//wrap around if out of bounds
+		if(pos > 511) {let pos = pos - 512;}
+		if(pos < 0) {let pos = pos + 512;}
+		return;
+	}
+	
+	method void turn(boolean c){
+		//black means turn left
+		if(c){
+			let dir = dir - 1;
+			if(dir = -1) {let dir = 3;}
+		}else{
+		//white means turn right
+			let dir = dir + 1;
+			if(dir = 4) {let dir = 0;}
+		}
+		return;
+	
+	}
+
+	method int getPos(){
+		return pos;
+	}
+}
